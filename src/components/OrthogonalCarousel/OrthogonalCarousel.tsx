@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { motion, useAnimationFrame } from "framer-motion";
 
 export interface OrthogonalCarouselProps {
