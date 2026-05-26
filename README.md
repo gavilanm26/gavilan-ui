@@ -1,4 +1,4 @@
-# @gavilan/ui
+# @gavilanm20/gavilan-ui
 
 Una colección premium e interactiva de componentes y animaciones visuales de alta gama para **React** y **Framer Motion**, diseñados bajo los más altos estándares de UI/UX, micro-movimiento acelerado por hardware y un diseño editorial minimalista sofisticado.
 
@@ -10,13 +10,13 @@ Instala el paquete en tu proyecto favorito usando tu gestor de paquetes preferid
 
 ```bash
 # Con pnpm (recomendado)
-pnpm add gavilan-ui
+pnpm add @gavilanm20/gavilan-ui
 
 # Con npm
-npm install gavilan-ui
+npm install @gavilanm20/gavilan-ui
 
 # Con yarn
-yarn add gavilan-ui
+yarn add @gavilanm20/gavilan-ui
 ```
 
 ### 📦 Dependencias requeridas (Peer Dependencies)
@@ -40,7 +40,7 @@ Un carrusel cuadrangular acelerado por GPU que desliza tarjetas de forma majestu
 ```tsx
 "use client";
 
-import { OrthogonalCarousel } from 'gavilan-ui';
+import { OrthogonalCarousel } from '@gavilanm20/gavilan-ui';
 
 // Tus tarjetas personalizadas (pueden ser cualquier elemento JSX)
 const myCards = [
