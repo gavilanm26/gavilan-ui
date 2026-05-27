@@ -24,7 +24,12 @@ export interface OrthogonalCardProps {
   bgImage?: string;
 
   /**
-   * Clases de CSS adicionales opcionales para personalizar el contenedor.
+   * Estilos inline adicionales para personalizar.
+   */
+  style?: React.CSSProperties;
+
+  /**
+   * Clases CSS opcionales para capas de diseño superiores.
    */
   className?: string;
 }
@@ -34,45 +39,147 @@ export function OrthogonalCard({
   title,
   badge,
   bgImage,
+  style = {},
   className = "",
 }: OrthogonalCardProps) {
-  // Dimensiones y radio de bordes idénticos a los del inspector de Taste Skill (486px x 252px, rounded-[18px])
-  const cardStyles = `w-[486px] h-[252px] rounded-[18px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden font-sans border border-black/[0.03] select-none ${className}`;
+  // Estilo estructural crítico base en CSS inline de toda la vida
+  // Esto inmuniza a la librería contra bundlers que no compilan Tailwind de node_modules
+  const cardBaseStyle: React.CSSProperties = {
+    width: "486px",
+    height: "252px",
+    borderRadius: "18px",
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "36px",
+    boxSizing: "border-box",
+    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    border: "1px solid rgba(0, 0, 0, 0.03)",
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03)",
+    userSelect: "none",
+    textAlign: "left",
+    ...style,
+  };
 
   switch (kind) {
     case "dark":
       return (
-        <div className={`${cardStyles} bg-[#0b0f12] text-white relative flex flex-col justify-between p-9 text-left`}>
-          <div className="absolute top-9 right-9 grid grid-cols-3 gap-1">
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#0b0f12",
+            color: "#ffffff",
+          }}
+        >
+          {/* Grid decorativo verde */}
+          <div
+            style={{
+              position: "absolute",
+              top: "36px",
+              right: "36px",
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gap: "4px",
+            }}
+          >
             {[...Array(9)].map((_, i) => (
               <span
                 key={i}
-                className="w-1.5 h-1.5 bg-[#52a350] rounded-[1px]"
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  backgroundColor: "#52a350",
+                  borderRadius: "1px",
+                }}
               />
             ))}
           </div>
-          <h2 className="text-[28px] font-medium leading-[1.25] tracking-tight max-w-[85%] mt-auto mb-auto">
-            {title || "We build systems teams actually run, scale, and trust."}
+
+          <h2
+            style={{
+              fontSize: "28px",
+              fontWeight: 500,
+              lineHeight: "1.25",
+              letterSpacing: "-0.025em",
+              maxWidth: "85%",
+              marginTop: "auto",
+              marginBottom: "auto",
+            }}
+          >
+            {title || (
+              <>
+                We build{" "}
+                <span style={{ textDecoration: "line-through", opacity: 0.3, fontWeight: "normal" }}>systems</span>{" "}
+                teams actually run, scale, and trust.
+              </>
+            )}
           </h2>
-          <div className="w-8 h-8 border-2 border-[#52a350] rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-[#52a350] rounded-full" />
+
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              border: "2px solid #52a350",
+              borderRadius: "9999px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "8px",
+                height: "8px",
+                backgroundColor: "#52a350",
+                borderRadius: "9999px",
+              }}
+            />
           </div>
         </div>
       );
 
     case "plants":
       return (
-        <div className={`${cardStyles} bg-[#f7f5f0] text-[#1c231f] p-9 text-left`}>
-          <div className="grid grid-cols-[1.2fr_1fr] h-full gap-5">
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#f7f5f0",
+            color: "#1c231f",
+            padding: "36px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.2fr 1fr",
+              height: "100%",
+              gap: "20px",
+            }}
+          >
             <h2
-              className="text-[36px] font-normal leading-[1.15] tracking-tight text-[#2d3b32] mt-4"
-              style={{ fontFamily: "Georgia, serif" }}
+              style={{
+                fontSize: "36px",
+                fontWeight: "normal",
+                lineHeight: "1.15",
+                letterSpacing: "-0.025em",
+                color: "#2d3b32",
+                marginTop: "16px",
+                fontFamily: "Georgia, serif",
+              }}
             >
               {title || "Plants for slower rooms"}
             </h2>
             <div
-              className="w-full h-full rounded-2xl bg-cover bg-center"
               style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "16px",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 backgroundImage: `url('${bgImage || "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=400"}')`,
               }}
             />
@@ -82,8 +189,23 @@ export function OrthogonalCard({
 
     case "light":
       return (
-        <div className={`${cardStyles} bg-[#fdfcfb] text-[#111111] flex flex-col justify-between p-9 text-left`}>
-          <h2 className="text-[40px] font-semibold tracking-[-1px] leading-[1.1] mt-2">
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#fdfcfb",
+            color: "#111111",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "40px",
+              fontWeight: 600,
+              letterSpacing: "-1px",
+              lineHeight: "1.1",
+              marginTop: "8px",
+            }}
+          >
             {title || (
               <>
                 Less slop,
@@ -92,31 +214,64 @@ export function OrthogonalCard({
               </>
             )}
           </h2>
-          <div className="self-start bg-[#fff0ec] text-[#C2410C] px-4 py-1.5 rounded-full text-[13px] font-semibold flex items-center gap-2 border border-[#ffe1da]">
-            <span className="text-[11px]">✓</span> {badge || "Clean Architecture"}
+          <div
+            style={{
+              alignSelf: "flex-start",
+              backgroundColor: "#fff0ec",
+              color: "#C2410C",
+              padding: "6px 16px",
+              borderRadius: "9999px",
+              fontSize: "13px",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              border: "1px solid #ffe1da",
+            }}
+          >
+            <span style={{ fontSize: "11px" }}>✓</span> {badge || "Clean Architecture"}
           </div>
         </div>
       );
 
     case "code":
       return (
-        <div className={`${cardStyles} bg-[#141416] text-[#a1a1a6] p-8 flex flex-col justify-between font-mono text-[13px] leading-relaxed text-left`}>
-          <div className="space-y-1 opacity-80">
-            <p className="text-[#f5f5f7]">
-              <span className="text-[#ff7b72]">import</span> &#123; Hexagonal &#125; <span className="text-[#ff7b72]">from</span> <span className="text-[#a5d6ff]">"architecture"</span>;
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#141416",
+            color: "#a1a1a6",
+            fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            fontSize: "13px",
+            padding: "32px",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px", opacity: 0.8 }}>
+            <p style={{ color: "#f5f5f7", margin: 0 }}>
+              <span style={{ color: "#ff7b72" }}>import</span> &#123; Hexagonal &#125; <span style={{ color: "#ff7b72" }}>from</span> <span style={{ color: "#a5d6ff" }}>"architecture"</span>;
             </p>
-            <p>
-              <span className="text-[#ff7b72]">const</span> <span className="text-[#79c0ff]">core</span> = &#123;
+            <p style={{ margin: 0 }}>
+              <span style={{ color: "#ff7b72" }}>const</span> <span style={{ color: "#79c0ff" }}>core</span> = &#123;
             </p>
-            <p className="pl-4">
-              domain: <span className="text-[#a5d6ff]">"CleanCode"</span>,
+            <p style={{ paddingLeft: "16px", margin: 0 }}>
+              domain: <span style={{ color: "#a5d6ff" }}>"CleanCode"</span>,
             </p>
-            <p className="pl-4">
-              pattern: <span className="text-[#a5d6ff]">"PortsAndAdapters"</span>
+            <p style={{ paddingLeft: "16px", margin: 0 }}>
+              pattern: <span style={{ color: "#a5d6ff" }}>"PortsAndAdapters"</span>
             </p>
-            <p>&#125;;</p>
+            <p style={{ margin: 0 }}>&#125;;</p>
           </div>
-          <div className="text-[11px] text-[#52a350] bg-[#52a350]/10 px-2.5 py-1 rounded md self-start">
+          <div
+            style={{
+              fontSize: "11px",
+              color: "#52a350",
+              backgroundColor: "rgba(82, 163, 80, 0.1)",
+              padding: "4px 10px",
+              borderRadius: "4px",
+              alignSelf: "flex-start",
+            }}
+          >
             {badge || "// high performance"}
           </div>
         </div>
@@ -124,22 +279,66 @@ export function OrthogonalCard({
 
     case "studio":
       return (
-        <div className={`${cardStyles} bg-[#000000] text-white relative p-9 flex flex-col justify-between text-left`}>
-          <div className="text-[11px] tracking-[0.2em] uppercase opacity-40 font-bold">
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#000000",
+            color: "#ffffff",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              opacity: 0.4,
+              fontWeight: "bold",
+            }}
+          >
             {badge || "Studio Session"}
           </div>
-          <h2 className="text-[32px] font-light tracking-tight leading-tight">
+          <h2
+            style={{
+              fontSize: "32px",
+              fontWeight: 300,
+              letterSpacing: "-0.025em",
+              lineHeight: "1.25",
+            }}
+          >
             {title || (
               <>
                 Crafting resilient{" "}
-                <span className="italic font-normal text-zinc-400">systems</span>.
+                <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#a1a1a6" }}>systems</span>.
               </>
             )}
           </h2>
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+          <div style={{ display: "flex", gap: "6px" }}>
+            <div
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "9999px",
+                backgroundColor: "#ef4444",
+                opacity: 0.8,
+              }}
+            />
+            <div
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "9999px",
+                backgroundColor: "#27272a",
+              }}
+            />
+            <div
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "9999px",
+                backgroundColor: "#27272a",
+              }}
+            />
           </div>
         </div>
       );
@@ -147,16 +346,63 @@ export function OrthogonalCard({
     case "aurora":
     default:
       return (
-        <div className={`${cardStyles} bg-[#0d0914] text-white relative p-9 flex flex-col justify-between overflow-hidden text-left`}>
-          {/* Fondo difuminado estilo Aurora Borealis */}
-          <div className="absolute -inset-10 opacity-40 bg-[radial-gradient(circle_at_top_right,#4f46e5,#06b6d4_50%,transparent)] blur-[40px]" />
-          <div className="relative z-10 text-[12px] opacity-60 font-semibold">
+        <div
+          className={className}
+          style={{
+            ...cardBaseStyle,
+            backgroundColor: "#0d0914",
+            color: "#ffffff",
+          }}
+        >
+          {/* Fondo Aurora difuminado */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-40px",
+              right: "-40px",
+              bottom: "-40px",
+              left: "-40px",
+              opacity: 0.4,
+              backgroundImage: "radial-gradient(circle at top right, #4f46e5, #06b6d4 50%, transparent)",
+              filter: "blur(40px)",
+              pointerEvents: "none",
+            }}
+          />
+          <div
+            style={{
+              position: "relative",
+              zIndex: 10,
+              fontSize: "12px",
+              opacity: 0.6,
+              fontWeight: 600,
+            }}
+          >
             {badge || "System Diagnostics"}
           </div>
-          <h2 className="relative z-10 text-[26px] font-medium tracking-tight leading-snug max-w-[90%] my-auto">
+          <h2
+            style={{
+              position: "relative",
+              zIndex: 10,
+              fontSize: "26px",
+              fontWeight: 500,
+              letterSpacing: "-0.025em",
+              lineHeight: "1.3",
+              maxWidth: "90%",
+              marginTop: "auto",
+              marginBottom: "auto",
+            }}
+          >
             {title || "High-fidelity microservices operational."}
           </h2>
-          <div className="relative z-10 text-[11px] text-cyan-400 font-mono">
+          <div
+            style={{
+              position: "relative",
+              zIndex: 10,
+              fontSize: "11px",
+              color: "#22d3ee",
+              fontFamily: "Consolas, Monaco, monospace",
+            }}
+          >
             STATUS // ACTIVE
           </div>
         </div>
