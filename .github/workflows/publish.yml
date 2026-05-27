@@ -1,0 +1,50 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+# Habilitar los permisos de OIDC (OpenID Connect) requeridos para Trusted Publishing
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Descargar el código fuente del repositorio
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Instalar y configurar PNPM de forma determinista
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      # Step 3: Instalar y configurar Node.js optimizando la caché de pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Step 4: Instalar las dependencias de forma congelada e inmutable
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 5: Ejecutar la suite completa de pruebas unitarias
+      - name: Run Unit Tests
+        run: pnpm test
+
+      # Step 6: Compilar los bundles de producción (ESM, CJS, DTS)
+      - name: Build Library Bundle
+        run: pnpm build
+
+      # Step 7: Publicar de forma segura en NPM usando Trusted Publishing (OIDC) y Provenance de firma digital
+      - name: Publish package to NPM
+        run: pnpm publish --access public --no-git-checks --provenance
