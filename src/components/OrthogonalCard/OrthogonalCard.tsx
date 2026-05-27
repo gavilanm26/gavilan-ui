@@ -72,7 +72,7 @@ export function OrthogonalCard({
         ? "linear-gradient(to bottom, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.93) 100%)"
         : "linear-gradient(to bottom, rgba(15, 20, 25, 0.65) 0%, rgba(10, 12, 16, 0.88) 100%)";
       return {
-        backgroundImage: `${overlay}, url('${bgImage}')`,
+        backgroundImage: `${overlay}, url(${bgImage})`,
       };
     }
     return {
@@ -202,7 +202,7 @@ export function OrthogonalCard({
                 borderRadius: "16px",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                backgroundImage: `url('${bgImage || "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=400"}')`,
+                backgroundImage: `url(${bgImage || "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=400"})`,
               }}
             />
           </div>
