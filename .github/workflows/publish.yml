@@ -6,11 +6,6 @@ on:
       - main
       - master
 
-# Habilitar los permisos de OIDC (OpenID Connect) requeridos para Trusted Publishing
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -45,6 +40,8 @@ jobs:
       - name: Build Library Bundle
         run: pnpm build
 
-      # Step 7: Publicar de forma segura en NPM usando Trusted Publishing (OIDC)
+      # Step 7: Publicar de forma segura en NPM usando el token de automatización tradicional
       - name: Publish package to NPM
         run: npm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
