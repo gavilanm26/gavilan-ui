@@ -60,7 +60,24 @@ export function OrthogonalCard({
     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03)",
     userSelect: "none",
     textAlign: "left",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     ...style,
+  };
+
+  // Función auxiliar para mezclar de forma legible imágenes de fondo con colores y superposiciones oscuras/claras
+  const getBackgroundStyle = (defaultColor: string, isLight: boolean): React.CSSProperties => {
+    if (bgImage) {
+      const overlay = isLight
+        ? "linear-gradient(to bottom, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.93) 100%)"
+        : "linear-gradient(to bottom, rgba(15, 20, 25, 0.65) 0%, rgba(10, 12, 16, 0.88) 100%)";
+      return {
+        backgroundImage: `${overlay}, url('${bgImage}')`,
+      };
+    }
+    return {
+      backgroundColor: defaultColor,
+    };
   };
 
   switch (kind) {
@@ -70,7 +87,7 @@ export function OrthogonalCard({
           className={className}
           style={{
             ...cardBaseStyle,
-            backgroundColor: "#0b0f12",
+            ...getBackgroundStyle("#0b0f12", false),
             color: "#ffffff",
           }}
         >
@@ -83,6 +100,7 @@ export function OrthogonalCard({
               display: "grid",
               gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
               gap: "4px",
+              zIndex: 5,
             }}
           >
             {[...Array(9)].map((_, i) => (
@@ -107,6 +125,8 @@ export function OrthogonalCard({
               maxWidth: "85%",
               marginTop: "auto",
               marginBottom: "auto",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             {title || (
@@ -127,6 +147,8 @@ export function OrthogonalCard({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             <div
@@ -193,7 +215,7 @@ export function OrthogonalCard({
           className={className}
           style={{
             ...cardBaseStyle,
-            backgroundColor: "#fdfcfb",
+            ...getBackgroundStyle("#fdfcfb", true),
             color: "#111111",
           }}
         >
@@ -204,6 +226,8 @@ export function OrthogonalCard({
               letterSpacing: "-1px",
               lineHeight: "1.1",
               marginTop: "8px",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             {title || (
@@ -227,6 +251,8 @@ export function OrthogonalCard({
               alignItems: "center",
               gap: "8px",
               border: "1px solid #ffe1da",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             <span style={{ fontSize: "11px" }}>✓</span> {badge || "Clean Architecture"}
@@ -240,14 +266,14 @@ export function OrthogonalCard({
           className={className}
           style={{
             ...cardBaseStyle,
-            backgroundColor: "#141416",
+            ...getBackgroundStyle("#141416", false),
             color: "#a1a1a6",
             fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
             fontSize: "13px",
             padding: "32px",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", opacity: 0.8 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px", opacity: 0.85, position: "relative", zIndex: 5 }}>
             <p style={{ color: "#f5f5f7", margin: 0 }}>
               <span style={{ color: "#ff7b72" }}>import</span> &#123; Hexagonal &#125; <span style={{ color: "#ff7b72" }}>from</span> <span style={{ color: "#a5d6ff" }}>"architecture"</span>;
             </p>
@@ -270,6 +296,8 @@ export function OrthogonalCard({
               padding: "4px 10px",
               borderRadius: "4px",
               alignSelf: "flex-start",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             {badge || "// high performance"}
@@ -283,7 +311,7 @@ export function OrthogonalCard({
           className={className}
           style={{
             ...cardBaseStyle,
-            backgroundColor: "#000000",
+            ...getBackgroundStyle("#000000", false),
             color: "#ffffff",
           }}
         >
@@ -294,6 +322,8 @@ export function OrthogonalCard({
               textTransform: "uppercase",
               opacity: 0.4,
               fontWeight: "bold",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             {badge || "Studio Session"}
@@ -304,6 +334,8 @@ export function OrthogonalCard({
               fontWeight: 300,
               letterSpacing: "-0.025em",
               lineHeight: "1.25",
+              position: "relative",
+              zIndex: 5,
             }}
           >
             {title || (
@@ -313,7 +345,7 @@ export function OrthogonalCard({
               </>
             )}
           </h2>
-          <div style={{ display: "flex", gap: "6px" }}>
+          <div style={{ display: "flex", gap: "6px", position: "relative", zIndex: 5 }}>
             <div
               style={{
                 width: "10px",
@@ -350,24 +382,26 @@ export function OrthogonalCard({
           className={className}
           style={{
             ...cardBaseStyle,
-            backgroundColor: "#0d0914",
+            ...getBackgroundStyle("#0d0914", false),
             color: "#ffffff",
           }}
         >
-          {/* Fondo Aurora difuminado */}
-          <div
-            style={{
-              position: "absolute",
-              top: "-40px",
-              right: "-40px",
-              bottom: "-40px",
-              left: "-40px",
-              opacity: 0.4,
-              backgroundImage: "radial-gradient(circle at top right, #4f46e5, #06b6d4 50%, transparent)",
-              filter: "blur(40px)",
-              pointerEvents: "none",
-            }}
-          />
+          {/* Fondo Aurora difuminado (si no hay bgImage, o como capa trasera de color) */}
+          {!bgImage && (
+            <div
+              style={{
+                position: "absolute",
+                top: "-40px",
+                right: "-40px",
+                bottom: "-40px",
+                left: "-40px",
+                opacity: 0.4,
+                backgroundImage: "radial-gradient(circle at top right, #4f46e5, #06b6d4 50%, transparent)",
+                filter: "blur(40px)",
+                pointerEvents: "none",
+              }}
+            />
+          )}
           <div
             style={{
               position: "relative",
