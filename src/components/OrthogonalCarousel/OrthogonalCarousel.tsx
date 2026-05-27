@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, useAnimationFrame } from "framer-motion";
+import { motion } from "framer-motion";
 
 export interface OrthogonalCarouselProps {
   /**
@@ -48,10 +48,35 @@ export function OrthogonalCarousel({
     console.log("✨ [@gavilanm/ui] OrthogonalCarousel montado con éxito! Total de items:", total);
   }, [total]);
 
-  // useAnimationFrame calibrado para un desplazamiento cuadrangular sumamente majestuoso y premium
-  useAnimationFrame((time) => {
-    setRotation(time * speed);
-  });
+  // Usamos requestAnimationFrame nativo de HTML5 para garantizar un giro majestuoso
+  // 100% inmune a bugs de inicialización de Framer Motion o desajustes en React 19
+  useEffect(() => {
+    let frameId: number;
+    let lastTime = 0;
+    let currentRot = 0;
+
+    const tick = (time: number) => {
+      // time viene en milisegundos desde el origen de navegación
+      setRotation(time * speed);
+      lastTime = time;
+      frameId = requestAnimationFrame(tick);
+    };
+
+    frameId = requestAnimationFrame(tick);
+
+    // Fallback de contingencia con setInterval en caso de que el navegador suspenda el frame en caliente
+    const intervalId = setInterval(() => {
+      if (lastTime === 0) {
+        currentRot += 16.67 * speed;
+        setRotation(currentRot);
+      }
+    }, 16.67);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearInterval(intervalId);
+    };
+  }, [speed]);
 
   return (
     <div
