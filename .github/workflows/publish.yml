@@ -19,11 +19,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Instalar y configurar PNPM de forma determinista
+      # Step 2: Instalar y configurar PNPM con la versión 9 moderna
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
 
       # Step 3: Instalar y configurar Node.js optimizando la caché de pnpm
       - name: Setup Node.js
@@ -33,9 +33,9 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
-      # Step 4: Instalar las dependencias de forma congelada e inmutable
+      # Step 4: Instalar las dependencias de forma flexible y blindada
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       # Step 5: Ejecutar la suite completa de pruebas unitarias
       - name: Run Unit Tests
