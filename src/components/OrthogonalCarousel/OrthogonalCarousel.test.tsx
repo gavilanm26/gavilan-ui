@@ -1,26 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { OrthogonalCarousel } from './OrthogonalCarousel';
-import { describe, it, expect, vi } from 'vitest';
-
-// Simulamos Framer Motion y useAnimationFrame para que los tests no dependan del ciclo de renderizado del navegador
-vi.mock('framer-motion', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('framer-motion')>();
-  return {
-    ...actual,
-    useAnimationFrame: (callback: (time: number) => void) => {
-      React.useEffect(() => {
-        callback(1000);
-      }, [callback]);
-    },
-    // Mock básico del componente motion.div para renderizar divs regulares en el entorno de pruebas
-    motion: {
-      div: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => (
-        <div ref={ref} {...props} />
-      )),
-    }
-  };
-});
+import { describe, it, expect } from 'vitest';
 
 describe('OrthogonalCarousel Component', () => {
   const dummyItems = [
@@ -32,6 +13,30 @@ describe('OrthogonalCarousel Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<OrthogonalCarousel items={dummyItems} />);
     expect(container).toBeDefined();
+  });
+
+  it('uses visible self-contained default container styles', () => {
+    const { container } = render(<OrthogonalCarousel items={dummyItems} />);
+    const containerDiv = container.firstChild as HTMLElement;
+
+    expect(containerDiv.style.position).toBe('fixed');
+    expect(containerDiv.style.right).toBe('-120px');
+    expect(containerDiv.style.top).toBe('-150px');
+    expect(containerDiv.style.height).toBe('1120px');
+    expect(containerDiv.style.width).toBe('1220px');
+    expect(containerDiv.style.pointerEvents).toBe('none');
+    expect(containerDiv.className).not.toContain('hidden');
+    expect(containerDiv.className).not.toContain('overflow-hidden');
+  });
+
+  it('allows inline container style overrides without external CSS configuration', () => {
+    const { container } = render(
+      <OrthogonalCarousel items={dummyItems} style={{ right: '-40px', top: '-80px' }} />
+    );
+    const containerDiv = container.firstChild as HTMLElement;
+
+    expect(containerDiv.style.right).toBe('-40px');
+    expect(containerDiv.style.top).toBe('-80px');
   });
 
   it('renders the correct amount of items passed as props', () => {

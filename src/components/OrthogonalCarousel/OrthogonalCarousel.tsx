@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 
 export interface OrthogonalCarouselProps {
   /**
@@ -29,9 +28,15 @@ export interface OrthogonalCarouselProps {
   glowOpacity?: number;
 
   /**
-   * Clases CSS opcionales para sobreescribir la posición o comportamiento del contenedor.
+   * Clases CSS opcionales para integrar con el layout del consumidor.
+   * La estructura crítica del carrusel no depende de estas clases.
    */
   className?: string;
+
+  /**
+   * Estilos inline opcionales para ajustar el contenedor sin requerir Tailwind u otro CSS externo.
+   */
+  style?: React.CSSProperties;
 }
 
 export function OrthogonalCarousel({
@@ -39,7 +44,8 @@ export function OrthogonalCarousel({
   speed = 0.000042,
   backgroundColor = "#f3f0ea",
   glowOpacity = 0.42,
-  className = "pointer-events-none absolute right-[-340px] top-[-280px] hidden h-[1120px] w-[1220px] overflow-hidden lg:block xl:right-[-200px] 2xl:right-[-90px] z-10",
+  className = "",
+  style,
 }: OrthogonalCarouselProps) {
   const [rotation, setRotation] = useState(0);
   const total = items.length;
@@ -82,29 +88,54 @@ export function OrthogonalCarousel({
     <div
       className={className}
       style={{
+        pointerEvents: "none",
+        position: "fixed",
+        right: "-120px",
+        top: "-150px",
+        zIndex: 10,
+        height: "1120px",
+        width: "1220px",
         isolation: "isolate",
         transform: "translateZ(0px)",
         willChange: "transform",
+        ...style,
       }}
     >
       {/* Máscaras de gradiente dinámico para fundido suave con el color de fondo */}
       <div
-        className="absolute inset-x-0 top-0 z-[12] h-[120px]"
         style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          zIndex: 12,
+          height: "120px",
           background: `linear-gradient(to bottom, ${backgroundColor} 0%, ${backgroundColor} 85%, transparent 100%)`,
         }}
       />
       <div
-        className="absolute inset-x-0 bottom-0 z-[12] h-[130px]"
         style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 12,
+          height: "130px",
           background: `linear-gradient(to top, ${backgroundColor} 0%, ${backgroundColor} 82%, transparent 100%)`,
         }}
       />
 
       {/* Brillo radial central orgánico */}
       <div
-        className="absolute left-[61%] top-[52%] h-[820px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
         style={{
+          position: "absolute",
+          left: "61%",
+          top: "52%",
+          height: "820px",
+          width: "820px",
+          transform: "translate(-50%, -50%)",
+          borderRadius: "9999px",
+          pointerEvents: "none",
           background: `radial-gradient(circle, rgba(255,255,255,${glowOpacity}), rgba(255,255,255,0) 70%)`,
         }}
       />
@@ -179,18 +210,21 @@ export function OrthogonalCarousel({
         const zIndex = Math.round(10 - p * 8);
 
         return (
-          <motion.div
+          <div
             key={index}
-            className="absolute left-0 top-0 will-change-transform"
             style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
               transform: `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotate(${rotate}deg)`,
               opacity,
               zIndex,
               transformOrigin: "center center",
+              willChange: "transform",
             }}
           >
             <div style={{ transform: "translate(-50%, -50%)" }}>{item}</div>
-          </motion.div>
+          </div>
         );
       })}
     </div>
