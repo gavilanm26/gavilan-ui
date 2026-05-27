@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { motion, useAnimationFrame } from "framer-motion";
 
 export interface OrthogonalCarouselProps {
@@ -37,10 +39,14 @@ export function OrthogonalCarousel({
   speed = 0.00008,
   backgroundColor = "#f3f0ea",
   glowOpacity = 0.42,
-  className = "pointer-events-none absolute right-[-340px] top-[-280px] hidden h-[1120px] w-[1220px] overflow-hidden lg:block xl:right-[-200px] 2xl:right-[-90px] z-0",
+  className = "pointer-events-none absolute right-[-340px] top-[-280px] hidden h-[1120px] w-[1220px] overflow-hidden lg:block xl:right-[-200px] 2xl:right-[-90px] z-10",
 }: OrthogonalCarouselProps) {
   const [rotation, setRotation] = useState(0);
   const total = items.length;
+
+  useEffect(() => {
+    console.log("✨ [@gavilanm/ui] OrthogonalCarousel montado con éxito! Total de items:", total);
+  }, [total]);
 
   // useAnimationFrame calibrado para un desplazamiento cuadrangular sumamente majestuoso y premium
   useAnimationFrame((time) => {
@@ -152,11 +158,8 @@ export function OrthogonalCarousel({
             key={index}
             className="absolute left-0 top-0 will-change-transform"
             style={{
-              x,
-              y,
-              scale,
+              transform: `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotate(${rotate}deg)`,
               opacity,
-              rotate,
               zIndex,
               transformOrigin: "center center",
             }}

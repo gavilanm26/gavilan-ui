@@ -1,6 +1,6 @@
 {
   "name": "@gavilanm/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Librería premium de componentes interactivos y animaciones fluidas para React y Framer Motion",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
