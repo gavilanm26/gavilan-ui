@@ -39,7 +39,7 @@ export function OrthogonalCarousel({
   speed = 0.00008,
   backgroundColor = "#f3f0ea",
   glowOpacity = 0.42,
-  className = "pointer-events-none absolute right-[-340px] top-[-280px] h-[1120px] w-[1220px] overflow-hidden xl:right-[-200px] 2xl:right-[-90px] z-10",
+  className = "pointer-events-none absolute right-[-340px] top-[-280px] hidden h-[1120px] w-[1220px] overflow-hidden lg:block xl:right-[-200px] 2xl:right-[-90px] z-10",
 }: OrthogonalCarouselProps) {
   const [rotation, setRotation] = useState(0);
   const total = items.length;
