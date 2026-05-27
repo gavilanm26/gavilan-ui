@@ -45,6 +45,6 @@ jobs:
       - name: Build Library Bundle
         run: pnpm build
 
-      # Step 7: Publicar de forma segura en NPM usando Trusted Publishing (OIDC) y Provenance de firma digital
+      # Step 7: Publicar de forma segura en NPM usando Trusted Publishing (OIDC)
       - name: Publish package to NPM
-        run: npm publish --access public --no-git-checks --provenance
+        run: npm publish --access public --no-git-checks
