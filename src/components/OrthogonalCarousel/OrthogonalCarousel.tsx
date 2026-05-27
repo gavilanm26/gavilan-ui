@@ -11,7 +11,7 @@ export interface OrthogonalCarouselProps {
 
   /**
    * Velocidad del ciclo de animación. Valores menores producen un giro más lento y majestuoso.
-   * Por defecto: 0.00008
+   * Por defecto: 0.000042
    */
   speed?: number;
 
@@ -36,7 +36,7 @@ export interface OrthogonalCarouselProps {
 
 export function OrthogonalCarousel({
   items,
-  speed = 0.00008,
+  speed = 0.000042,
   backgroundColor = "#f3f0ea",
   glowOpacity = 0.42,
   className = "pointer-events-none absolute right-[-340px] top-[-280px] hidden h-[1120px] w-[1220px] overflow-hidden lg:block xl:right-[-200px] 2xl:right-[-90px] z-10",
