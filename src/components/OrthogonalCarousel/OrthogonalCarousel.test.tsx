@@ -19,7 +19,7 @@ describe('OrthogonalCarousel Component', () => {
     const { container } = render(<OrthogonalCarousel items={dummyItems} />);
     const containerDiv = container.firstChild as HTMLElement;
 
-    expect(containerDiv.style.position).toBe('fixed');
+    expect(containerDiv.style.position).toBe('absolute');
     expect(containerDiv.style.right).toBe('-120px');
     expect(containerDiv.style.top).toBe('-150px');
     expect(containerDiv.style.height).toBe('1120px');

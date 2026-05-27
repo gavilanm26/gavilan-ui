@@ -86,18 +86,16 @@ export function OrthogonalCarousel({
 
   return (
     <div
-      className={className}
+      className={`orthogonal-carousel-root ${className}`}
       style={{
         pointerEvents: "none",
-        position: "fixed",
+        position: "absolute",
         right: "-120px",
         top: "-150px",
         zIndex: 10,
         height: "1120px",
         width: "1220px",
         isolation: "isolate",
-        transform: "translateZ(0px)",
-        willChange: "transform",
         ...style,
       }}
     >
@@ -227,6 +225,38 @@ export function OrthogonalCarousel({
           </div>
         );
       })}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            /* Ocultar completamente en smartphones y tablets */
+            @media (max-width: 1023px) {
+              .orthogonal-carousel-root {
+                display: none !important;
+              }
+            }
+            
+            /* MacBook Air 13" y laptops pequeñas/medianas (1024px a 1399px) */
+            @media (min-width: 1024px) and (max-width: 1399px) {
+              .orthogonal-carousel-root {
+                transform: scale(0.8) !important;
+                transform-origin: top right !important;
+                right: -150px !important;
+                top: -120px !important;
+              }
+            }
+
+            /* Pantallas medianas-grandes y laptops de 15"/16" (1400px a 1599px) */
+            @media (min-width: 1400px) and (max-width: 1599px) {
+              .orthogonal-carousel-root {
+                transform: scale(0.9) !important;
+                transform-origin: top right !important;
+                right: -130px !important;
+                top: -140px !important;
+              }
+            }
+          `,
+        }}
+      />
     </div>
   );
 }
